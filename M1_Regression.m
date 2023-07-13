@@ -1,9 +1,9 @@
-%% M1-drived bbNAP
+%% M1-derived bbNAP
 clc;clear
-load('D:\Desktop\m\data\ESAoccci_data\V5.0\monthly\bin1\chl.mat');
-load('D:\Desktop\m\data\ESAoccci_data\V5.0\monthly\bin1\bbp.mat');
+load('D:\Desktop\Cod\Data\Global data\Chl.mat');
+load('D:\Desktop\Cod\Data\Global data\bbp.mat');
 chl(chl<=0) = NaN;bbp(bbp<=0) = NaN;
-nap_B18 = [];k = [];r2_B18 = [];
+NAP_M1 = [];k = [];r2 = [];
 for i = 1:360
     for j = 1:181
         X = [];Y = [];aa1 = [];aa2 = [];num = 0;
@@ -23,19 +23,19 @@ for i = 1:360
             aa = aa1';bb = aa2';
             AA = [ones(size(bb)),aa];
             [b,bint,r,rint,stats] = regress(bb,AA);
-            nap_B18(i,j) = b(1);
+            NAP_M1(i,j) = b(1);
             k(i,j)   = b(2);
-            r2_B18(i,j)   = stats(1);
+            r2(i,j)   = stats(1);
         else if num < 20
-                nap_B18(i,j)     = NaN;
+                NAP_M1(i,j)     = NaN;
                 k(i,j)           = NaN;
-                r2_B18(i,j)      = NaN;
+                r2(i,j)      = NaN;
             end
         end
     end
 end
-nap_B18(k<=0) = NaN;
-r2_B18(k<=0) = NaN;
+NAP_M1(k<=0) = NaN;
+r2(k<=0) = NaN;
 
-save('B18.mat','nap_B18','r2_B18');
+% save('B18.mat','nap_B18','r2_B18');
 

@@ -1,17 +1,17 @@
-% %  M2-drived bbNAP
+% %  M2-derived bbNAP
 clc;clear
-load('D:\Desktop\m\data\ESAoccci_data\V5.0\monthly\bin1\bbp.mat');
-load('D:\Desktop\m\data\ESAoccci_data\V5.0\monthly\bin1\chl.mat');
-load('D:\Desktop\m\data\ESAoccci_data\V5.0\monthly\bin1\ig.mat');
-load('D:\Desktop\m\data\ESAoccci_data\V5.0\monthly\bin1\sst.mat');
-nap_m3G87 = [];chlcmin_m3G87 = []; r2_m3G87 = [];
+load('D:\Desktop\Cod\Data\Global data\Chl.mat');
+load('D:\Desktop\Cod\Data\Global data\bbp.mat');
+load('D:\Desktop\Cod\Data\Global data\SST.mat');
+load('D:\Desktop\Cod\Data\Global data\PARg.mat');
+nap_M2 = [];chlcmin = []; r2 = [];
 for i = 1:360
     for j = 1:173
         num = 0;
         X = [];Y = [];
         aa1 = [];aa2 = []; aa3 = []; aa4 = [];
         x = bbp(i,j+8,:);
-        y = 1./(43.4-1.14*sst(i,j+8,:));
+        y = 1./(43.4-1.14*sst(i,j+8,:));%%Geider 87
         z = exp(-3*ig(i,j,:));
         w = chl(i,j+8,:);
         x = x(:);z = z(:);w = w(:);y = y(:);
@@ -37,21 +37,21 @@ for i = 1:360
             Y                = aa4';
             func             = @(a,X)13000*(X(:,1)-a(1)).*(a(2)+(X(:,2)-a(2)).*X(:,3));
             [a,resnorm]      = lsqcurvefit(func,a0,X,Y,[-0.1 0],[0.1 0.1]);
-            r2_m3G87(i,j)      = 1 - resnorm/sum((aa4 - mean(aa4)).^2);%%求R2指数
-            nap_m3G87(i,j)     = a(1);
-            chlcmin_m3G87(i,j) = a(2);
+            r2(i,j)      = 1 - resnorm/sum((aa4 - mean(aa4)).^2);%%求R2指数
+            nap_M2(i,j)     = a(1);
+            chlcmin(i,j) = a(2);
         else if num < 20
-                nap_m3G87(i,j)     = NaN;
-                chlcmin_m3G87(i,j) = NaN;
-                r2_m3G87(i,j)      = NaN;
+                nap_M2(i,j)     = NaN;
+                chlcmin(i,j) = NaN;
+                r2(i,j)      = NaN;
             end
         end
     end
 end
 
-chlcmin_m3G87(nap_m3G87<0) = NaN;
-r2_m3G87(nap_m3G87<0)      = NaN;
-nap_m3G87(nap_m3G87<0)     = NaN;
+chlcmin(nap_M2<0) = NaN;
+r2(nap_M2<0)      = NaN;
+nap_M2(nap_M2<0)     = NaN;
 
-save('D:\Desktop\bbNAP_2022\cod-nap\m3_G87.mat','nap_m3G87','chlcmin_m3G87');
+% save('D:\Desktop\bbNAP_2022\cod-nap\m3_G87.mat','nap_m3G87','chlcmin_m3G87');
 
